@@ -36,6 +36,14 @@ setInterval(() => {
   fs.writeFileSync("market.json", JSON.stringify(market, null, 2));
 }, 5000);
 
+async function saveFiles() {
+  await new Promise((resolve) => {
+    fs.writeFileSync("tasks.json", JSON.stringify(tasks, null, 2));
+    fs.writeFileSync("market.json", JSON.stringify(market, null, 2));
+    resolve();
+  });
+}
+
 async function wait(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
@@ -1405,6 +1413,7 @@ async function handleReleaseTask(client, channel, pokemon, tasks) {
     const index = pokemon.findIndex((p) => p.id === filtered.id);
     if (index !== -1) pokemon.splice(index, 1);
   });
+  return;
 }
 
 async function handleSellTask(client, channel, pokemon, tasks, market) {
@@ -1425,39 +1434,41 @@ async function handleSellTask(client, channel, pokemon, tasks, market) {
     .slice(0, 1)
     .map((p) => p.id);
 
-  console.log(filteredPokemon);
   await channel.send(`<@716390085896962058> m add ${filteredPokemon[0]} 1000`);
 
-  const collector = channel.createMessageCollector({
-    filter: (msg) =>
-      msg.author.id === "716390085896962058" &&
-      msg?.content.includes("Are you sure you want to list your") &&
-      channel.messages.fetch(msg.reference.messageId).author.id ===
-        client.user.id,
-    time: 20000,
-    max: 1,
-  });
-
-  collector.on("collect", async (msg) => {
-    const listingCollector = channel.createMessageCollector({
+  await new Promise((resolve) => {
+    const collector = channel.createMessageCollector({
       filter: (msg) =>
         msg.author.id === "716390085896962058" &&
-        msg?.content.includes("Listed your"),
+        msg?.content.includes("Are you sure you want to list your") &&
+        channel.messages.fetch(msg.reference.messageId).author.id ===
+          client.user.id,
       time: 20000,
       max: 1,
     });
 
-    listingCollector.on("collect", async (msg) => {
-      const listingIdMatch = msg.content.match(/Listing #(\d+)/);
-      if (listingIdMatch) {
-        const listingId = listingIdMatch[1];
-        tasks[client.user.username].earn = 0;
-        market[client.user.username].push(listingId);
-        sendLog(client.user.username, `Listed pokemon for sale!`, "success");
-      }
-    });
+    collector.on("collect", async (msg) => {
+      const listingCollector = channel.createMessageCollector({
+        filter: (msg) =>
+          msg.author.id === "716390085896962058" &&
+          msg?.content.includes("Listed your"),
+        time: 20000,
+        max: 1,
+      });
 
-    await msg.clickButton(msg.components[0].components[0].customId);
+      listingCollector.on("collect", async (msg) => {
+        const listingIdMatch = msg.content.match(/Listing #(\d+)/);
+        if (listingIdMatch) {
+          const listingId = listingIdMatch[1];
+          tasks[client.user.username].earn = 0;
+          market[client.user.username].push(listingId);
+          sendLog(client.user.username, `Listed pokemon for sale!`, "success");
+          resolve();
+        }
+      });
+
+      await msg.clickButton(msg.components[0].components[0].customId);
+    });
   });
 }
 
@@ -1470,7 +1481,7 @@ async function handleBuyTask(client, channel, tasks, market) {
   );
 
   if (availableListings.length === 0) {
-    //sendLog(client.user.username, "No available listings found.", "error");
+    sendLog(client.user.username, "No available listings found.", "error");
     return;
   }
 
@@ -1478,24 +1489,37 @@ async function handleBuyTask(client, channel, tasks, market) {
     availableListings[Math.floor(Math.random() * availableListings.length)];
   await channel.send(`<@716390085896962058> m buy ${listingId}`);
 
-  const collector = channel.createMessageCollector({
-    filter: (msg) =>
-      msg.author.id === "716390085896962058" &&
-      msg?.content.includes("Are you sure you want to buy this") &&
-      channel.messages.fetch(msg.reference.messageId).author.id ===
-        client.user.id,
-    time: 20000,
-    max: 1,
-  });
+  await new Promise((resolve) => {
+    const collector = channel.createMessageCollector({
+      filter: (msg) =>
+        msg.author.id === "716390085896962058" &&
+        msg?.content.includes("Are you sure you want to buy this") &&
+        channel.messages.fetch(msg.reference.messageId).author.id ===
+          client.user.id,
+      time: 20000,
+      max: 1,
+    });
 
-  collector.on("collect", async (msg) => {
-    await msg.clickButton(msg.components[0].components[0].customId);
-    tasks[client.user.username].spend = 0;
-    sendLog(
-      client.user.username,
-      `Bought pokemon with listing ID ${listingId}!`,
-      "success"
-    );
+    collector.on("collect", async (msg) => {
+      await msg.clickButton(msg.components[0].components[0].customId);
+      tasks[client.user.username].spend = 0;
+
+      // Remove the listing from the market
+      for (const [username, listings] of Object.entries(market)) {
+        const index = listings.indexOf(listingId);
+        if (index !== -1) {
+          listings.splice(index, 1);
+          break;
+        }
+      }
+
+      sendLog(
+        client.user.username,
+        `Bought pokemon with listing ID ${listingId}!`,
+        "success"
+      );
+      resolve();
+    });
   });
 }
 
@@ -1547,6 +1571,7 @@ function sendLog(username, message, type) {
 
 async function tasksCompleted(client, channel, tasks, pokemon) {
   channel.send("<@716390085896962058> order iv");
+  await saveFiles();
   const marketOutstanding = market[client.user.username]?.length || 0;
   sendLog(
     client.user.username,
