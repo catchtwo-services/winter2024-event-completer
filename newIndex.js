@@ -10,6 +10,8 @@ const { checkRarity } = require("pokehint");
 let tasks = {};
 let market = {};
 let admin = [];
+let done = 0;
+let counter = 0;
 
 setTimeout(async () => {
   fs.readFile("tasks.json", "utf8", (err, data) => {
@@ -44,7 +46,6 @@ tokens.forEach(async (token) => {
   const { Client } = require("discord.js-selfbot-v13");
   const client = new Client({ checkUpdate: false, readyStatus: false });
   let pokemon = [];
-  let counter = 0;
 
   client.login(token).catch((err) => {
     sendLog(null, `Failed to login with token: ${token}`, "error");
@@ -88,7 +89,7 @@ tokens.forEach(async (token) => {
       );
       process.exit(0);
     } else if (channel) {
-      sendLog(client.user.username, `Channel found!`, "success");
+      //sendLog(client.user.username, `Channel found!`, "success");
     }
 
     channel
@@ -196,61 +197,100 @@ tokens.forEach(async (token) => {
               pokemon.push({ id, name, iv, shiny, rare });
             }
           });
-        };
 
-        if (msg.components[0]?.components[1]) {
-          client.on("messageUpdate", messageUpdateListener);
-          msg.clickButton(msg?.components[0]?.components[1]?.customId);
-        }
-      });
-
-    channel.send("<@716390085896962058> p");
-
-    setTimeout(async () => {
-      await handleReleaseTask(client, channel, pokemon, tasks);
-      await handleSellTask(client, channel, pokemon, tasks, market);
-      await handleBuyTask(client, channel, tasks, market);
-      if (tasks[client.user.username].evolve > 0) {
-        /*channel.send(
-          "<@716390085896962058> p --n Kadabra Machoke Graveler Haunter Boldore Gurdurr Karrablast Shelmet Phantump Pumpkaboo"
-        );
-
-        channel
-          .createMessageCollector({
-            filter: (msg) =>
-              (msg.author.id === "716390085896962058" &&
-                msg?.embeds[0]?.title === "Your pokémon") ||
-              msg.content === "No pokémon found.",
-            time: 20000,
-            max: 1,
-          })
-          .on("collect", async (msg) => {
-            if (msg.embeds[0]) {
-              const description = msg.embeds[0].description;
-              description?.split("\n").forEach(async (line) => {
-                const idMatch = line.match(/^`(\d+)`/);
-                const nameMatch = line.match(/>\s(.+?)<:/);
-                const ivMatch = line.match(/•\s(\d+\.\d+)%/);
-                const shinyMatch = line.includes("✨");
-
-                if (idMatch && nameMatch && ivMatch) {
-                  const id = idMatch[1];
-                  const name = nameMatch[1].replace("✨", "").trimStart();
-                  const iv = ivMatch[1];
-                  const shiny = shinyMatch ? true : false;
-                  const rarity = await checkRarity(name);
-                  const rare = rarity !== "Regular";
-
-                  pokemon.push({ id, name, iv, shiny, rare });
+          await handleReleaseTask(client, channel, pokemon, tasks);
+          await handleSellTask(client, channel, pokemon, tasks, market);
+          await handleBuyTask(client, channel, tasks, market);
+          if (tasks[client.user.username].evolve > 0) {
+            /*channel.send(
+              "<@716390085896962058> p --n Kadabra Machoke Graveler Haunter Boldore Gurdurr Karrablast Shelmet Phantump Pumpkaboo"
+            );
+    
+            channel
+              .createMessageCollector({
+                filter: (msg) =>
+                  (msg.author.id === "716390085896962058" &&
+                    msg?.embeds[0]?.title === "Your pokémon") ||
+                  msg.content === "No pokémon found.",
+                time: 20000,
+                max: 1,
+              })
+              .on("collect", async (msg) => {
+                if (msg.embeds[0]) {
+                  const description = msg.embeds[0].description;
+                  description?.split("\n").forEach(async (line) => {
+                    const idMatch = line.match(/^`(\d+)`/);
+                    const nameMatch = line.match(/>\s(.+?)<:/);
+                    const ivMatch = line.match(/•\s(\d+\.\d+)%/);
+                    const shinyMatch = line.includes("✨");
+    
+                    if (idMatch && nameMatch && ivMatch) {
+                      const id = idMatch[1];
+                      const name = nameMatch[1].replace("✨", "").trimStart();
+                      const iv = ivMatch[1];
+                      const shiny = shinyMatch ? true : false;
+                      const rarity = await checkRarity(name);
+                      const rare = rarity !== "Regular";
+    
+                      pokemon.push({ id, name, iv, shiny, rare });
+                    }
+                  });
+    
+                  // Listen for message updates
+                  messageUpdateListener =async (oldMessage, newMessage) => {
+                    if (newMessage?.id !== msg.id) return;
+    
+                    const updatedDescription = newMessage?.embeds[0]?.description;
+                    updatedDescription?.split("\n").forEach(async (line) => {
+                      const idMatch = line.match(/^`(\d+)`/);
+                      const nameMatch = line.match(/>\s(.+?)<:/);
+                      const ivMatch = line.match(/•\s(\d+\.\d+)%/);
+                      const shinyMatch = line.includes("✨");
+    
+                      if (idMatch && nameMatch && ivMatch) {
+                        const id = idMatch[1];
+                        const name = nameMatch[1].replace("✨", "").trimStart();
+                        const iv = ivMatch[1];
+                        const shiny = shinyMatch ? true : false;
+                        const rarity = await checkRarity(name);
+                        const rare = rarity !== "Regular";
+    
+                        pokemon.push({ id, name, iv, shiny, rare });
+                      }
+                    });
+                  };
+                  client.off("messageUpdate", messageUpdateListener);
                 }
-              });
+                if (msg?.components[0]?.components[1]?.disabled === false) {
+                  msg.clickButton(msg?.components[0]?.components[1]?.customId);
+                } else if (
+                  msg?.components[0]?.components[1]?.disabled === true ||
+                  msg.content === "No pokémon found."
+                ) {*/
+            setTimeout(() => {
+              channel.send(
+                "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9"
+              );
+            }, 5000);
 
-              // Listen for message updates
-              messageUpdateListener =async (oldMessage, newMessage) => {
-                if (newMessage?.id !== msg.id) return;
-
-                const updatedDescription = newMessage?.embeds[0]?.description;
-                updatedDescription?.split("\n").forEach(async (line) => {
+            channel
+              .createMessageCollector({
+                filter: async (msg) =>
+                  (msg.author.id === "716390085896962058" &&
+                    channel.messages.fetch(msg?.reference?.messageId)
+                      .content ===
+                      "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9" &&
+                    msg?.embeds[0]?.title === "Your pokémon") ||
+                  msg.content === "No pokémon found!",
+                time: 20000,
+                max: 1,
+              })
+              .on("collect", async (msg) => {
+                if (!msg.embeds[0]) {
+                  return;
+                }
+                const description = msg.embeds[0].description;
+                description.split("\n").forEach(async (line) => {
                   const idMatch = line.match(/^`(\d+)`/);
                   const nameMatch = line.match(/>\s(.+?)<:/);
                   const ivMatch = line.match(/•\s(\d+\.\d+)%/);
@@ -267,99 +307,415 @@ tokens.forEach(async (token) => {
                     pokemon.push({ id, name, iv, shiny, rare });
                   }
                 });
-              };
-              client.off("messageUpdate", messageUpdateListener);
-            }
-            if (msg?.components[0]?.components[1]?.disabled === false) {
-              msg.clickButton(msg?.components[0]?.components[1]?.customId);
-            } else if (
-              msg?.components[0]?.components[1]?.disabled === true ||
-              msg.content === "No pokémon found."
-            ) {*/
-        setTimeout(() => {
-          channel.send(
-            "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9"
-          );
-        }, 5000);
 
-        channel
-          .createMessageCollector({
-            filter: async (msg) =>
-              (msg.author.id === "716390085896962058" &&
-                channel.messages.fetch(msg?.reference?.messageId).content ===
-                  "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9" &&
-                msg?.embeds[0]?.title === "Your pokémon") ||
-              msg.content === "No pokémon found!",
-            time: 20000,
-            max: 1,
-          })
-          .on("collect", async (msg) => {
-            if (!msg.embeds[0]) {
-              return;
-            }
-            const description = msg.embeds[0].description;
-            description.split("\n").forEach(async (line) => {
-              const idMatch = line.match(/^`(\d+)`/);
-              const nameMatch = line.match(/>\s(.+?)<:/);
-              const ivMatch = line.match(/•\s(\d+\.\d+)%/);
-              const shinyMatch = line.includes("✨");
+                // Listen for message updates
+                messageUpdateListener = async (oldMessage, newMessage) => {
+                  if (newMessage.id !== msg.id) return;
 
-              if (idMatch && nameMatch && ivMatch) {
-                const id = idMatch[1];
-                const name = nameMatch[1].replace("✨", "").trimStart();
-                const iv = ivMatch[1];
-                const shiny = shinyMatch ? true : false;
-                const rarity = await checkRarity(name);
-                const rare = rarity !== "Regular";
+                  const updatedDescription = newMessage.embeds[0].description;
+                  updatedDescription.split("\n").forEach(async (line) => {
+                    const idMatch = line.match(/^`(\d+)`/);
+                    const nameMatch = line.match(/>\s(.+?)<:/);
+                    const ivMatch = line.match(/•\s(\d+\.\d+)%/);
+                    const shinyMatch = line.includes("✨");
 
-                pokemon.push({ id, name, iv, shiny, rare });
-              }
-            });
+                    if (idMatch && nameMatch && ivMatch) {
+                      const id = idMatch[1];
+                      const name = nameMatch[1].replace("✨", "").trimStart();
+                      const iv = ivMatch[1];
+                      const shiny = shinyMatch ? true : false;
+                      const rarity = await checkRarity(name);
+                      const rare = rarity !== "Regular";
 
-            // Listen for message updates
-            messageUpdateListener = async (oldMessage, newMessage) => {
-              if (newMessage.id !== msg.id) return;
+                      pokemon.push({ id, name, iv, shiny, rare });
+                    }
+                  });
+                  if (
+                    msg.components[0]?.components[1]?.disabled === false &&
+                    msg.embeds[0] &&
+                    msg.embeds[0].footer &&
+                    msg.embeds[0].footer.text &&
+                    (() => {
+                      const footerText = msg.embeds[0].footer.text;
+                      const match = footerText.match(
+                        /(\d+)[^\d]+(\d+)[^\d]+(\d+)/
+                      );
+                      if (match) {
+                        const lastNumber = parseInt(match[3], 10);
+                        const secondLastNumber = parseInt(match[2], 10);
+                        if (lastNumber === secondLastNumber) return false;
+                      }
+                      return true;
+                    })()
+                  ) {
+                    msg.clickButton(
+                      msg?.components[0]?.components[1]?.customId
+                    );
+                  } else if (
+                    msg.components[0]?.components[1].disabled === true ||
+                    (msg.embeds[0] && !msg.components[0]) ||
+                    msg.embeds[0].footer.text === "" ||
+                    (msg.embeds[0] &&
+                      msg.embeds[0].footer &&
+                      msg.embeds[0].footer.text &&
+                      (() => {
+                        const footerText = msg.embeds[0].footer.text;
+                        const match = footerText.match(
+                          /(\d+)[^\d]+(\d+)[^\d]+(\d+)/
+                        );
+                        if (match) {
+                          const lastNumber = parseInt(match[3], 10);
+                          const secondLastNumber = parseInt(match[2], 10);
+                          if (lastNumber === secondLastNumber) return true;
+                        }
+                        return false;
+                      })())
+                  ) {
+                    client.off("messageUpdate", messageUpdateListener);
 
-              const updatedDescription = newMessage.embeds[0].description;
-              updatedDescription.split("\n").forEach(async (line) => {
-                const idMatch = line.match(/^`(\d+)`/);
-                const nameMatch = line.match(/>\s(.+?)<:/);
-                const ivMatch = line.match(/•\s(\d+\.\d+)%/);
-                const shinyMatch = line.includes("✨");
+                    const filteredPokemon = pokemon
+                      .filter(
+                        (p) =>
+                          !p.rare &&
+                          !p.shiny &&
+                          [
+                            "Mantyke",
+                            "Charjabug",
+                            "Stantler",
+                            "Hisuian Qwilfish",
+                            "Caterpie",
+                            "Weedle",
+                            "Wurmple",
+                            "Scatterbug",
+                            "Metapod",
+                            "Kakuna",
+                            "Silcoon",
+                            "Cascoon",
+                            "Kricketot",
+                            "Blipbug",
+                          ].includes(p.name) &&
+                          parseFloat(p.iv) >= 10.0 &&
+                          parseFloat(p.iv) <= 85.0
+                      )
+                      .slice(0, tasks[client.user.username].evolve)
+                      .map((p) => p.id);
 
-                if (idMatch && nameMatch && ivMatch) {
-                  const id = idMatch[1];
-                  const name = nameMatch[1].replace("✨", "").trimStart();
-                  const iv = ivMatch[1];
-                  const shiny = shinyMatch ? true : false;
-                  const rarity = await checkRarity(name);
-                  const rare = rarity !== "Regular";
+                    if (
+                      filteredPokemon.length ==
+                      tasks[client.user.username].evolve
+                    ) {
+                      channel.send(
+                        `<@716390085896962058> evolve ${filteredPokemon.join(
+                          " "
+                        )}`
+                      );
 
-                  pokemon.push({ id, name, iv, shiny, rare });
-                }
-              });
-              if (
-                msg.components[0]?.components[1]?.disabled === false &&
-                msg.embeds[0] &&
-                msg.embeds[0].footer &&
-                msg.embeds[0].footer.text &&
-                (() => {
-                  const footerText = msg.embeds[0].footer.text;
-                  const match = footerText.match(/(\d+)[^\d]+(\d+)[^\d]+(\d+)/);
-                  if (match) {
-                    const lastNumber = parseInt(match[3], 10);
-                    const secondLastNumber = parseInt(match[2], 10);
-                    if (lastNumber === secondLastNumber) return false;
+                      sendLog(
+                        client.user.username,
+                        `Evolved ${filteredPokemon.length} pokemon!`,
+                        "success"
+                      );
+                      tasks[client.user.username].evolve = 0;
+                    } else if (
+                      filteredPokemon.length <
+                      tasks[client.user.username].evolve
+                    ) {
+                      sendLog(
+                        client.user.username,
+                        `Not enough pokemon to evolve, attempting to buy new ones!`,
+                        "error"
+                      );
+                      channel.send(
+                        `<@716390085896962058> m s --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9 --o price`
+                      );
+
+                      channel
+                        .createMessageCollector({
+                          filter: (msg) =>
+                            msg.author.id === "716390085896962058" &&
+                            msg?.embeds[0]?.title === "Pokétwo Marketplace",
+                          time: 20000,
+                          max: 1,
+                        })
+                        .on("collect", async (msg) => {
+                          const description = msg.embeds[0].description;
+                          const marketBuys = description
+                            .split("\n")
+                            .map((line) => {
+                              const match = line.match(
+                                /^(\d+)\s+.*•\s+(\d+)\s+pc$/
+                              );
+                              if (match) {
+                                const id = match[1];
+                                const price = match[2];
+                                if (price < 250) {
+                                  return { id };
+                                } else {
+                                  return null;
+                                }
+                              }
+                              return null;
+                            })
+                            .filter((buyable) => buyable !== null);
+
+                          marketBuys.forEach((buyable) => {
+                            channel.send(
+                              `<@716390085896962058> m buy ${buyable.id}`
+                            );
+                            channel
+                              .createMessageCollector({
+                                filter: (msg) =>
+                                  msg.author.id === "716390085896962058" &&
+                                  msg?.content.includes(
+                                    "Are you sure you want to buy the following pokémon"
+                                  ) &&
+                                  channel.messages.fetch(
+                                    msg.reference.messageId
+                                  ).author.id === client.user.id,
+                                time: 20000,
+                                max: 1,
+                              })
+                              .on("collect", async (msg) => {
+                                msg.clickButton(
+                                  msg.components[0].components[0].customId
+                                );
+                                sendLog(
+                                  client.user.username,
+                                  `Bought pokemon with ID ${buyable.id}!`,
+                                  "success"
+                                );
+                              });
+                          });
+                        });
+                    }
                   }
-                  return true;
-                })()
-              ) {
-                msg.clickButton(msg?.components[0]?.components[1]?.customId);
-              } else if (
-                msg.components[0]?.components[1].disabled === true ||
-                (msg.embeds[0] && !msg.components[0]) ||
-                msg.embeds[0].footer.text === "" ||
-                (msg.embeds[0] &&
+                };
+
+                if (msg.embeds[0] && !msg.components[0]) {
+                  client.off("messageUpdate", messageUpdateListener);
+
+                  const filteredPokemon = pokemon
+                    .filter(
+                      (p) =>
+                        !p.rare &&
+                        !p.shiny &&
+                        [
+                          "Mantyke",
+                          "Charjabug",
+                          "Stantler",
+                          "Hisuian Qwilfish",
+                          "Caterpie",
+                          "Weedle",
+                          "Wurmple",
+                          "Scatterbug",
+                          "Metapod",
+                          "Kakuna",
+                          "Silcoon",
+                          "Cascoon",
+                          "Kricketot",
+                          "Blipbug",
+                        ].includes(p.name) &&
+                        parseFloat(p.iv) >= 10.0 &&
+                        parseFloat(p.iv) <= 85.0
+                    )
+                    .slice(0, tasks[client.user.username].evolve)
+                    .map((p) => p.id);
+
+                  if (
+                    filteredPokemon.length == tasks[client.user.username].evolve
+                  ) {
+                    channel.send(
+                      `<@716390085896962058> evolve ${filteredPokemon.join(
+                        " "
+                      )}`
+                    );
+
+                    sendLog(
+                      client.user.username,
+                      `Evolved ${filteredPokemon.length} pokemon!`,
+                      "success"
+                    );
+                    tasks[client.user.username].evolve = 0;
+                  } else if (
+                    filteredPokemon.length < tasks[client.user.username].evolve
+                  ) {
+                    sendLog(
+                      client.user.username,
+                      `Not enough pokemon to evolve, attempting to buy new ones!`,
+                      "error"
+                    );
+                    channel.send(
+                      `<@716390085896962058> m s --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9 --o price`
+                    );
+
+                    channel
+                      .createMessageCollector({
+                        filter: (msg) =>
+                          msg.author.id === "716390085896962058" &&
+                          msg?.embeds[0]?.title === "Pokétwo Marketplace",
+                        time: 20000,
+                        max: 1,
+                      })
+                      .on("collect", async (msg) => {
+                        const description = msg.embeds[0].description;
+                        const marketBuys = description
+                          .split("\n")
+                          .map((line) => {
+                            const match = line.match(
+                              /^`(\d+)`\s+.*•\s+(\d+)\s+pc$/
+                            );
+                            if (match) {
+                              const id = match[1];
+                              const price = match[2];
+                              if (price < 250) {
+                                return { id };
+                              } else {
+                                return null;
+                              }
+                            }
+                            return null;
+                          })
+                          .filter((buyable) => buyable !== null);
+
+                        (async () => {
+                          for (
+                            let i = 0;
+                            i < marketBuys.length &&
+                            i + filteredPokemon.length <
+                              tasks[client.user.username].evolve;
+                            i++
+                          ) {
+                            const buyable = marketBuys[i];
+                            await channel.send(
+                              `<@716390085896962058> m buy ${buyable.id}`
+                            );
+
+                            const collector = channel.createMessageCollector({
+                              filter: (msg) =>
+                                msg.author.id === "716390085896962058" &&
+                                msg?.content.includes(
+                                  "Are you sure you want to buy this"
+                                ) &&
+                                channel.messages.fetch(msg.reference.messageId)
+                                  .author.id === client.user.id,
+                              time: 20000,
+                              max: 1,
+                            });
+
+                            await new Promise((resolve) => {
+                              collector.on("collect", async (msg) => {
+                                await msg.clickButton(
+                                  msg.components[0].components[0].customId
+                                );
+                                sendLog(
+                                  client.user.username,
+                                  `Bought pokemon with ID ${buyable.id}!`,
+                                  "success"
+                                );
+                                resolve();
+                              });
+                            });
+                          }
+
+                          setTimeout(() => {
+                            channel.send(
+                              "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9"
+                            );
+                          }, 5000);
+
+                          channel
+                            .createMessageCollector({
+                              filter: async (msg) =>
+                                (msg.author.id === "716390085896962058" &&
+                                  channel.messages.fetch(
+                                    msg.reference.messageId
+                                  ).content ===
+                                    "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9" &&
+                                  msg?.embeds[0]?.title === "Your pokémon") ||
+                                msg.content === "No pokémon found!",
+                              time: 20000,
+                              max: 1,
+                            })
+                            .on("collect", async (msg) => {
+                              if (!msg.embeds[0]) {
+                                return;
+                              }
+                              const description = msg.embeds[0].description;
+                              description.split("\n").forEach(async (line) => {
+                                const idMatch = line.match(/^`(\d+)`/);
+                                const nameMatch = line.match(/>\s(.+?)<:/);
+                                const ivMatch = line.match(/•\s(\d+\.\d+)%/);
+                                const shinyMatch = line.includes("✨");
+
+                                if (idMatch && nameMatch && ivMatch) {
+                                  const id = idMatch[1];
+                                  const name = nameMatch[1]
+                                    .replace("✨", "")
+                                    .trimStart();
+                                  const iv = ivMatch[1];
+                                  const shiny = shinyMatch ? true : false;
+                                  const rarity = await checkRarity(name);
+                                  const rare = rarity !== "Regular";
+
+                                  pokemon.push({ id, name, iv, shiny, rare });
+                                }
+                              });
+
+                              if (msg.embeds[0] && !msg.components[0]) {
+                                const filteredPokemon = pokemon
+                                  .filter(
+                                    (p) =>
+                                      !p.rare &&
+                                      !p.shiny &&
+                                      [
+                                        "Mantyke",
+                                        "Charjabug",
+                                        "Stantler",
+                                        "Hisuian Qwilfish",
+                                        "Caterpie",
+                                        "Weedle",
+                                        "Wurmple",
+                                        "Scatterbug",
+                                        "Metapod",
+                                        "Kakuna",
+                                        "Silcoon",
+                                        "Cascoon",
+                                        "Kricketot",
+                                        "Blipbug",
+                                      ].includes(p.name) &&
+                                      parseFloat(p.iv) >= 10.0 &&
+                                      parseFloat(p.iv) <= 85.0
+                                  )
+                                  .slice(0, tasks[client.user.username].evolve)
+                                  .map((p) => p.id);
+
+                                if (
+                                  filteredPokemon.length ==
+                                  tasks[client.user.username].evolve
+                                ) {
+                                  channel.send(
+                                    `<@716390085896962058> evolve ${filteredPokemon.join(
+                                      " "
+                                    )}`
+                                  );
+
+                                  sendLog(
+                                    client.user.username,
+                                    `Evolved ${filteredPokemon.length} pokemon!`,
+                                    "success"
+                                  );
+                                  tasks[client.user.username].evolve = 0;
+                                }
+                              }
+                            });
+                        })();
+                      });
+                  }
+                }
+
+                if (
+                  msg.components[0]?.components[1] &&
+                  msg.embeds[0] &&
                   msg.embeds[0].footer &&
                   msg.embeds[0].footer.text &&
                   (() => {
@@ -370,389 +726,606 @@ tokens.forEach(async (token) => {
                     if (match) {
                       const lastNumber = parseInt(match[3], 10);
                       const secondLastNumber = parseInt(match[2], 10);
-                      if (lastNumber === secondLastNumber) return true;
+                      if (lastNumber === secondLastNumber) return false;
                     }
-                    return false;
-                  })())
-              ) {
-                client.off("messageUpdate", messageUpdateListener);
-
-                const filteredPokemon = pokemon
-                  .filter(
-                    (p) =>
-                      !p.rare &&
-                      !p.shiny &&
-                      [
-                        "Mantyke",
-                        "Charjabug",
-                        "Stantler",
-                        "Hisuian Qwilfish",
-                        "Caterpie",
-                        "Weedle",
-                        "Wurmple",
-                        "Scatterbug",
-                        "Metapod",
-                        "Kakuna",
-                        "Silcoon",
-                        "Cascoon",
-                        "Kricketot",
-                        "Blipbug",
-                      ].includes(p.name) &&
-                      parseFloat(p.iv) >= 10.0 &&
-                      parseFloat(p.iv) <= 85.0
-                  )
-                  .slice(0, tasks[client.user.username].evolve)
-                  .map((p) => p.id);
-
-                if (
-                  filteredPokemon.length == tasks[client.user.username].evolve
+                    return true;
+                  })()
                 ) {
-                  channel.send(
-                    `<@716390085896962058> evolve ${filteredPokemon.join(" ")}`
-                  );
-
-                  sendLog(
-                    client.user.username,
-                    `Evolved ${filteredPokemon.length} pokemon!`,
-                    "success"
-                  );
-                } else if (
-                  filteredPokemon.length < tasks[client.user.username].evolve
-                ) {
-                  sendLog(
-                    client.user.username,
-                    `Not enough pokemon to evolve, attempting to buy new ones!`,
-                    "error"
-                  );
-                  channel.send(
-                    `<@716390085896962058> m s --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9 --o price`
-                  );
-
-                  channel
-                    .createMessageCollector({
-                      filter: (msg) =>
-                        msg.author.id === "716390085896962058" &&
-                        msg?.embeds[0]?.title === "Pokétwo Marketplace",
-                      time: 20000,
-                      max: 1,
-                    })
-                    .on("collect", async (msg) => {
-                      const description = msg.embeds[0].description;
-                      const marketBuys = description
-                        .split("\n")
-                        .map((line) => {
-                          const match = line.match(
-                            /^(\d+)\s+.*•\s+(\d+)\s+pc$/
-                          );
-                          if (match) {
-                            const id = match[1];
-                            const price = match[2];
-                            if (price < 250) {
-                              return { id };
-                            } else {
-                              return null;
-                            }
-                          }
-                          return null;
-                        })
-                        .filter((buyable) => buyable !== null);
-
-                      marketBuys.forEach((buyable) => {
-                        channel.send(
-                          `<@716390085896962058> m buy ${buyable.id}`
-                        );
-                        channel
-                          .createMessageCollector({
-                            filter: (msg) =>
-                              msg.author.id === "716390085896962058" &&
-                              msg?.content.includes(
-                                "Are you sure you want to buy the following pokémon"
-                              ) &&
-                              channel.messages.fetch(msg.reference.messageId)
-                                .author.id === client.user.id,
-                            time: 20000,
-                            max: 1,
-                          })
-                          .on("collect", async (msg) => {
-                            msg.clickButton(
-                              msg.components[0].components[0].customId
-                            );
-                            sendLog(
-                              client.user.username,
-                              `Bought pokemon with ID ${buyable.id}!`,
-                              "success"
-                            );
-                          });
-                      });
-                    });
+                  client.on("messageUpdate", messageUpdateListener);
+                  msg.clickButton(msg?.components[0]?.components[1]?.customId);
                 }
-              }
-            };
+              });
+            //}
 
-            if (msg.embeds[0] && !msg.components[0]) {
-              client.off("messageUpdate", messageUpdateListener);
+            /*if (msg?.components[0]?.components[1]) {
+              client.on("messageUpdate", messageUpdateListener);
+              msg.clickButton(msg?.components[0]?.components[1]?.customId);
+            }*/
+            //});
+          }
+          await tasksCompleted(client, channel, tasks, pokemon);
+          channel.send("<@716390085896962058> order iv");
+        };
 
-              const filteredPokemon = pokemon
-                .filter(
-                  (p) =>
-                    !p.rare &&
-                    !p.shiny &&
-                    [
-                      "Mantyke",
-                      "Charjabug",
-                      "Stantler",
-                      "Hisuian Qwilfish",
-                      "Caterpie",
-                      "Weedle",
-                      "Wurmple",
-                      "Scatterbug",
-                      "Metapod",
-                      "Kakuna",
-                      "Silcoon",
-                      "Cascoon",
-                      "Kricketot",
-                      "Blipbug",
-                    ].includes(p.name) &&
-                    parseFloat(p.iv) >= 10.0 &&
-                    parseFloat(p.iv) <= 85.0
-                )
-                .slice(0, tasks[client.user.username].evolve)
-                .map((p) => p.id);
+        if (msg.components[0]?.components[1]) {
+          client.on("messageUpdate", messageUpdateListener);
+          msg
+            .clickButton(msg?.components[0]?.components[1]?.customId)
+            .catch((err) => {
+              console.log(err);
+              msg.clickButton(msg?.components[0]?.components[1]?.customId);
+            });
+        } else {
+          await handleReleaseTask(client, channel, pokemon, tasks);
+          await handleSellTask(client, channel, pokemon, tasks, market);
+          await handleBuyTask(client, channel, tasks, market);
+          if (tasks[client.user.username].evolve > 0) {
+            /*channel.send(
+              "<@716390085896962058> p --n Kadabra Machoke Graveler Haunter Boldore Gurdurr Karrablast Shelmet Phantump Pumpkaboo"
+            );
+    
+            channel
+              .createMessageCollector({
+                filter: (msg) =>
+                  (msg.author.id === "716390085896962058" &&
+                    msg?.embeds[0]?.title === "Your pokémon") ||
+                  msg.content === "No pokémon found.",
+                time: 20000,
+                max: 1,
+              })
+              .on("collect", async (msg) => {
+                if (msg.embeds[0]) {
+                  const description = msg.embeds[0].description;
+                  description?.split("\n").forEach(async (line) => {
+                    const idMatch = line.match(/^`(\d+)`/);
+                    const nameMatch = line.match(/>\s(.+?)<:/);
+                    const ivMatch = line.match(/•\s(\d+\.\d+)%/);
+                    const shinyMatch = line.includes("✨");
+    
+                    if (idMatch && nameMatch && ivMatch) {
+                      const id = idMatch[1];
+                      const name = nameMatch[1].replace("✨", "").trimStart();
+                      const iv = ivMatch[1];
+                      const shiny = shinyMatch ? true : false;
+                      const rarity = await checkRarity(name);
+                      const rare = rarity !== "Regular";
+    
+                      pokemon.push({ id, name, iv, shiny, rare });
+                    }
+                  });
+    
+                  // Listen for message updates
+                  messageUpdateListener =async (oldMessage, newMessage) => {
+                    if (newMessage?.id !== msg.id) return;
+    
+                    const updatedDescription = newMessage?.embeds[0]?.description;
+                    updatedDescription?.split("\n").forEach(async (line) => {
+                      const idMatch = line.match(/^`(\d+)`/);
+                      const nameMatch = line.match(/>\s(.+?)<:/);
+                      const ivMatch = line.match(/•\s(\d+\.\d+)%/);
+                      const shinyMatch = line.includes("✨");
+    
+                      if (idMatch && nameMatch && ivMatch) {
+                        const id = idMatch[1];
+                        const name = nameMatch[1].replace("✨", "").trimStart();
+                        const iv = ivMatch[1];
+                        const shiny = shinyMatch ? true : false;
+                        const rarity = await checkRarity(name);
+                        const rare = rarity !== "Regular";
+    
+                        pokemon.push({ id, name, iv, shiny, rare });
+                      }
+                    });
+                  };
+                  client.off("messageUpdate", messageUpdateListener);
+                }
+                if (msg?.components[0]?.components[1]?.disabled === false) {
+                  msg.clickButton(msg?.components[0]?.components[1]?.customId);
+                } else if (
+                  msg?.components[0]?.components[1]?.disabled === true ||
+                  msg.content === "No pokémon found."
+                ) {*/
+            setTimeout(() => {
+              channel.send(
+                "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9"
+              );
+            }, 5000);
 
-              if (
-                filteredPokemon.length == tasks[client.user.username].evolve
-              ) {
-                channel.send(
-                  `<@716390085896962058> evolve ${filteredPokemon.join(" ")}`
-                );
+            channel
+              .createMessageCollector({
+                filter: async (msg) =>
+                  (msg.author.id === "716390085896962058" &&
+                    channel.messages.fetch(msg?.reference?.messageId)
+                      .content ===
+                      "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9" &&
+                    msg?.embeds[0]?.title === "Your pokémon") ||
+                  msg.content === "No pokémon found!",
+                time: 20000,
+                max: 1,
+              })
+              .on("collect", async (msg) => {
+                if (!msg.embeds[0]) {
+                  return;
+                }
+                const description = msg.embeds[0].description;
+                description.split("\n").forEach(async (line) => {
+                  const idMatch = line.match(/^`(\d+)`/);
+                  const nameMatch = line.match(/>\s(.+?)<:/);
+                  const ivMatch = line.match(/•\s(\d+\.\d+)%/);
+                  const shinyMatch = line.includes("✨");
 
-                sendLog(
-                  client.user.username,
-                  `Evolved ${filteredPokemon.length} pokemon!`,
-                  "success"
-                );
-              } else if (
-                filteredPokemon.length < tasks[client.user.username].evolve
-              ) {
-                sendLog(
-                  client.user.username,
-                  `Not enough pokemon to evolve, attempting to buy new ones!`,
-                  "error"
-                );
-                channel.send(
-                  `<@716390085896962058> m s --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9 --o price`
-                );
+                  if (idMatch && nameMatch && ivMatch) {
+                    const id = idMatch[1];
+                    const name = nameMatch[1].replace("✨", "").trimStart();
+                    const iv = ivMatch[1];
+                    const shiny = shinyMatch ? true : false;
+                    const rarity = await checkRarity(name);
+                    const rare = rarity !== "Regular";
 
-                channel
-                  .createMessageCollector({
-                    filter: (msg) =>
-                      msg.author.id === "716390085896962058" &&
-                      msg?.embeds[0]?.title === "Pokétwo Marketplace",
-                    time: 20000,
-                    max: 1,
-                  })
-                  .on("collect", async (msg) => {
-                    const description = msg.embeds[0].description;
-                    const marketBuys = description
-                      .split("\n")
-                      .map((line) => {
-                        const match = line.match(
-                          /^`(\d+)`\s+.*•\s+(\d+)\s+pc$/
+                    pokemon.push({ id, name, iv, shiny, rare });
+                  }
+                });
+
+                // Listen for message updates
+                messageUpdateListener = async (oldMessage, newMessage) => {
+                  if (newMessage.id !== msg.id) return;
+
+                  const updatedDescription = newMessage.embeds[0].description;
+                  updatedDescription.split("\n").forEach(async (line) => {
+                    const idMatch = line.match(/^`(\d+)`/);
+                    const nameMatch = line.match(/>\s(.+?)<:/);
+                    const ivMatch = line.match(/•\s(\d+\.\d+)%/);
+                    const shinyMatch = line.includes("✨");
+
+                    if (idMatch && nameMatch && ivMatch) {
+                      const id = idMatch[1];
+                      const name = nameMatch[1].replace("✨", "").trimStart();
+                      const iv = ivMatch[1];
+                      const shiny = shinyMatch ? true : false;
+                      const rarity = await checkRarity(name);
+                      const rare = rarity !== "Regular";
+
+                      pokemon.push({ id, name, iv, shiny, rare });
+                    }
+                  });
+                  if (
+                    msg.components[0]?.components[1]?.disabled === false &&
+                    msg.embeds[0] &&
+                    msg.embeds[0].footer &&
+                    msg.embeds[0].footer.text &&
+                    (() => {
+                      const footerText = msg.embeds[0].footer.text;
+                      const match = footerText.match(
+                        /(\d+)[^\d]+(\d+)[^\d]+(\d+)/
+                      );
+                      if (match) {
+                        const lastNumber = parseInt(match[3], 10);
+                        const secondLastNumber = parseInt(match[2], 10);
+                        if (lastNumber === secondLastNumber) return false;
+                      }
+                      return true;
+                    })()
+                  ) {
+                    msg.clickButton(
+                      msg?.components[0]?.components[1]?.customId
+                    );
+                  } else if (
+                    msg.components[0]?.components[1].disabled === true ||
+                    (msg.embeds[0] && !msg.components[0]) ||
+                    msg.embeds[0].footer.text === "" ||
+                    (msg.embeds[0] &&
+                      msg.embeds[0].footer &&
+                      msg.embeds[0].footer.text &&
+                      (() => {
+                        const footerText = msg.embeds[0].footer.text;
+                        const match = footerText.match(
+                          /(\d+)[^\d]+(\d+)[^\d]+(\d+)/
                         );
                         if (match) {
-                          const id = match[1];
-                          const price = match[2];
-                          if (price < 250) {
-                            return { id };
-                          } else {
-                            return null;
-                          }
+                          const lastNumber = parseInt(match[3], 10);
+                          const secondLastNumber = parseInt(match[2], 10);
+                          if (lastNumber === secondLastNumber) return true;
                         }
-                        return null;
-                      })
-                      .filter((buyable) => buyable !== null);
+                        return false;
+                      })())
+                  ) {
+                    client.off("messageUpdate", messageUpdateListener);
 
-                    (async () => {
-                      for (
-                        let i = 0;
-                        i < marketBuys.length &&
-                        i + filteredPokemon.length <
-                          tasks[client.user.username].evolve;
-                        i++
-                      ) {
-                        const buyable = marketBuys[i];
-                        await channel.send(
-                          `<@716390085896962058> m buy ${buyable.id}`
-                        );
+                    const filteredPokemon = pokemon
+                      .filter(
+                        (p) =>
+                          !p.rare &&
+                          !p.shiny &&
+                          [
+                            "Mantyke",
+                            "Charjabug",
+                            "Stantler",
+                            "Hisuian Qwilfish",
+                            "Caterpie",
+                            "Weedle",
+                            "Wurmple",
+                            "Scatterbug",
+                            "Metapod",
+                            "Kakuna",
+                            "Silcoon",
+                            "Cascoon",
+                            "Kricketot",
+                            "Blipbug",
+                          ].includes(p.name) &&
+                          parseFloat(p.iv) >= 10.0 &&
+                          parseFloat(p.iv) <= 85.0
+                      )
+                      .slice(0, tasks[client.user.username].evolve)
+                      .map((p) => p.id);
 
-                        const collector = channel.createMessageCollector({
-                          filter: (msg) =>
-                            msg.author.id === "716390085896962058" &&
-                            msg?.content.includes(
-                              "Are you sure you want to buy this"
-                            ) &&
-                            channel.messages.fetch(msg.reference.messageId)
-                              .author.id === client.user.id,
-                          time: 20000,
-                          max: 1,
-                        });
+                    if (
+                      filteredPokemon.length ==
+                      tasks[client.user.username].evolve
+                    ) {
+                      channel.send(
+                        `<@716390085896962058> evolve ${filteredPokemon.join(
+                          " "
+                        )}`
+                      );
 
-                        await new Promise((resolve) => {
-                          collector.on("collect", async (msg) => {
-                            await msg.clickButton(
-                              msg.components[0].components[0].customId
-                            );
-                            sendLog(
-                              client.user.username,
-                              `Bought pokemon with ID ${buyable.id}!`,
-                              "success"
-                            );
-                            resolve();
-                          });
-                        });
-                      }
-
-                      setTimeout(() => {
-                        channel.send(
-                          "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9"
-                        );
-                      }, 5000);
+                      sendLog(
+                        client.user.username,
+                        `Evolved ${filteredPokemon.length} pokemon!`,
+                        "success"
+                      );
+                      tasks[client.user.username].evolve = 0;
+                    } else if (
+                      filteredPokemon.length <
+                      tasks[client.user.username].evolve
+                    ) {
+                      sendLog(
+                        client.user.username,
+                        `Not enough pokemon to evolve, attempting to buy new ones!`,
+                        "error"
+                      );
+                      channel.send(
+                        `<@716390085896962058> m s --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9 --o price`
+                      );
 
                       channel
                         .createMessageCollector({
-                          filter: async (msg) =>
-                            (msg.author.id === "716390085896962058" &&
-                              channel.messages.fetch(msg.reference.messageId)
-                                .content ===
-                                "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9" &&
-                              msg?.embeds[0]?.title === "Your pokémon") ||
-                            msg.content === "No pokémon found!",
+                          filter: (msg) =>
+                            msg.author.id === "716390085896962058" &&
+                            msg?.embeds[0]?.title === "Pokétwo Marketplace",
                           time: 20000,
                           max: 1,
                         })
                         .on("collect", async (msg) => {
-                          if (!msg.embeds[0]) {
-                            return;
-                          }
                           const description = msg.embeds[0].description;
-                          description.split("\n").forEach(async (line) => {
-                            const idMatch = line.match(/^`(\d+)`/);
-                            const nameMatch = line.match(/>\s(.+?)<:/);
-                            const ivMatch = line.match(/•\s(\d+\.\d+)%/);
-                            const shinyMatch = line.includes("✨");
+                          const marketBuys = description
+                            .split("\n")
+                            .map((line) => {
+                              const match = line.match(
+                                /^(\d+)\s+.*•\s+(\d+)\s+pc$/
+                              );
+                              if (match) {
+                                const id = match[1];
+                                const price = match[2];
+                                if (price < 250) {
+                                  return { id };
+                                } else {
+                                  return null;
+                                }
+                              }
+                              return null;
+                            })
+                            .filter((buyable) => buyable !== null);
 
-                            if (idMatch && nameMatch && ivMatch) {
-                              const id = idMatch[1];
-                              const name = nameMatch[1]
-                                .replace("✨", "")
-                                .trimStart();
-                              const iv = ivMatch[1];
-                              const shiny = shinyMatch ? true : false;
-                              const rarity = await checkRarity(name);
-                              const rare = rarity !== "Regular";
-
-                              pokemon.push({ id, name, iv, shiny, rare });
-                            }
+                          marketBuys.forEach((buyable) => {
+                            channel.send(
+                              `<@716390085896962058> m buy ${buyable.id}`
+                            );
+                            channel
+                              .createMessageCollector({
+                                filter: (msg) =>
+                                  msg.author.id === "716390085896962058" &&
+                                  msg?.content.includes(
+                                    "Are you sure you want to buy the following pokémon"
+                                  ) &&
+                                  channel.messages.fetch(
+                                    msg.reference.messageId
+                                  ).author.id === client.user.id,
+                                time: 20000,
+                                max: 1,
+                              })
+                              .on("collect", async (msg) => {
+                                msg.clickButton(
+                                  msg.components[0].components[0].customId
+                                );
+                                sendLog(
+                                  client.user.username,
+                                  `Bought pokemon with ID ${buyable.id}!`,
+                                  "success"
+                                );
+                              });
                           });
-
-                          if (msg.embeds[0] && !msg.components[0]) {
-                            const filteredPokemon = pokemon
-                              .filter(
-                                (p) =>
-                                  !p.rare &&
-                                  !p.shiny &&
-                                  [
-                                    "Mantyke",
-                                    "Charjabug",
-                                    "Stantler",
-                                    "Hisuian Qwilfish",
-                                    "Caterpie",
-                                    "Weedle",
-                                    "Wurmple",
-                                    "Scatterbug",
-                                    "Metapod",
-                                    "Kakuna",
-                                    "Silcoon",
-                                    "Cascoon",
-                                    "Kricketot",
-                                    "Blipbug",
-                                  ].includes(p.name) &&
-                                  parseFloat(p.iv) >= 10.0 &&
-                                  parseFloat(p.iv) <= 85.0
-                              )
-                              .slice(0, tasks[client.user.username].evolve)
-                              .map((p) => p.id);
-
-                            if (
-                              filteredPokemon.length ==
-                              tasks[client.user.username].evolve
-                            ) {
-                              channel.send(
-                                `<@716390085896962058> evolve ${filteredPokemon.join(
-                                  " "
-                                )}`
-                              );
-
-                              sendLog(
-                                client.user.username,
-                                `Evolved ${filteredPokemon.length} pokemon!`,
-                                "success"
-                              );
-                            }
-                          }
                         });
-                    })();
-                  });
-              }
-            }
+                    }
+                  }
+                };
 
-            if (
-              msg.components[0]?.components[1] &&
-              msg.embeds[0] &&
-              msg.embeds[0].footer &&
-              msg.embeds[0].footer.text &&
-              (() => {
-                const footerText = msg.embeds[0].footer.text;
-                const match = footerText.match(/(\d+)[^\d]+(\d+)[^\d]+(\d+)/);
-                if (match) {
-                  const lastNumber = parseInt(match[3], 10);
-                  const secondLastNumber = parseInt(match[2], 10);
-                  if (lastNumber === secondLastNumber) return false;
+                if (msg.embeds[0] && !msg.components[0]) {
+                  client.off("messageUpdate", messageUpdateListener);
+
+                  const filteredPokemon = pokemon
+                    .filter(
+                      (p) =>
+                        !p.rare &&
+                        !p.shiny &&
+                        [
+                          "Mantyke",
+                          "Charjabug",
+                          "Stantler",
+                          "Hisuian Qwilfish",
+                          "Caterpie",
+                          "Weedle",
+                          "Wurmple",
+                          "Scatterbug",
+                          "Metapod",
+                          "Kakuna",
+                          "Silcoon",
+                          "Cascoon",
+                          "Kricketot",
+                          "Blipbug",
+                        ].includes(p.name) &&
+                        parseFloat(p.iv) >= 10.0 &&
+                        parseFloat(p.iv) <= 85.0
+                    )
+                    .slice(0, tasks[client.user.username].evolve)
+                    .map((p) => p.id);
+
+                  if (
+                    filteredPokemon.length == tasks[client.user.username].evolve
+                  ) {
+                    channel.send(
+                      `<@716390085896962058> evolve ${filteredPokemon.join(
+                        " "
+                      )}`
+                    );
+
+                    sendLog(
+                      client.user.username,
+                      `Evolved ${filteredPokemon.length} pokemon!`,
+                      "success"
+                    );
+                    tasks[client.user.username].evolve = 0;
+                  } else if (
+                    filteredPokemon.length < tasks[client.user.username].evolve
+                  ) {
+                    sendLog(
+                      client.user.username,
+                      `Not enough pokemon to evolve, attempting to buy new ones!`,
+                      "error"
+                    );
+                    channel.send(
+                      `<@716390085896962058> m s --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9 --o price`
+                    );
+
+                    channel
+                      .createMessageCollector({
+                        filter: (msg) =>
+                          msg.author.id === "716390085896962058" &&
+                          msg?.embeds[0]?.title === "Pokétwo Marketplace",
+                        time: 20000,
+                        max: 1,
+                      })
+                      .on("collect", async (msg) => {
+                        const description = msg.embeds[0].description;
+                        const marketBuys = description
+                          .split("\n")
+                          .map((line) => {
+                            const match = line.match(
+                              /^`(\d+)`\s+.*•\s+(\d+)\s+pc$/
+                            );
+                            if (match) {
+                              const id = match[1];
+                              const price = match[2];
+                              if (price < 250) {
+                                return { id };
+                              } else {
+                                return null;
+                              }
+                            }
+                            return null;
+                          })
+                          .filter((buyable) => buyable !== null);
+
+                        (async () => {
+                          for (
+                            let i = 0;
+                            i < marketBuys.length &&
+                            i + filteredPokemon.length <
+                              tasks[client.user.username].evolve;
+                            i++
+                          ) {
+                            const buyable = marketBuys[i];
+                            await channel.send(
+                              `<@716390085896962058> m buy ${buyable.id}`
+                            );
+
+                            const collector = channel.createMessageCollector({
+                              filter: (msg) =>
+                                msg.author.id === "716390085896962058" &&
+                                msg?.content.includes(
+                                  "Are you sure you want to buy this"
+                                ) &&
+                                channel.messages.fetch(msg.reference.messageId)
+                                  .author.id === client.user.id,
+                              time: 20000,
+                              max: 1,
+                            });
+
+                            await new Promise((resolve) => {
+                              collector.on("collect", async (msg) => {
+                                await msg.clickButton(
+                                  msg.components[0].components[0].customId
+                                );
+                                sendLog(
+                                  client.user.username,
+                                  `Bought pokemon with ID ${buyable.id}!`,
+                                  "success"
+                                );
+                                resolve();
+                              });
+                            });
+                          }
+
+                          setTimeout(() => {
+                            channel.send(
+                              "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9"
+                            );
+                          }, 5000);
+
+                          channel
+                            .createMessageCollector({
+                              filter: async (msg) =>
+                                (msg.author.id === "716390085896962058" &&
+                                  channel.messages.fetch(
+                                    msg.reference.messageId
+                                  ).content ===
+                                    "<@716390085896962058> p --n Mantyke --n Charjabug --n Stantler --n Hisuian Qwilfish --n Caterpie --n Weedle --n Wurmple --n Scatterbug --n Metapod --n Kakuna --n Silcoon --n Cascoon --n Kricketot --n Blipbug --lev >9" &&
+                                  msg?.embeds[0]?.title === "Your pokémon") ||
+                                msg.content === "No pokémon found!",
+                              time: 20000,
+                              max: 1,
+                            })
+                            .on("collect", async (msg) => {
+                              if (!msg.embeds[0]) {
+                                return;
+                              }
+                              const description = msg.embeds[0].description;
+                              description.split("\n").forEach(async (line) => {
+                                const idMatch = line.match(/^`(\d+)`/);
+                                const nameMatch = line.match(/>\s(.+?)<:/);
+                                const ivMatch = line.match(/•\s(\d+\.\d+)%/);
+                                const shinyMatch = line.includes("✨");
+
+                                if (idMatch && nameMatch && ivMatch) {
+                                  const id = idMatch[1];
+                                  const name = nameMatch[1]
+                                    .replace("✨", "")
+                                    .trimStart();
+                                  const iv = ivMatch[1];
+                                  const shiny = shinyMatch ? true : false;
+                                  const rarity = await checkRarity(name);
+                                  const rare = rarity !== "Regular";
+
+                                  pokemon.push({ id, name, iv, shiny, rare });
+                                }
+                              });
+
+                              if (msg.embeds[0] && !msg.components[0]) {
+                                const filteredPokemon = pokemon
+                                  .filter(
+                                    (p) =>
+                                      !p.rare &&
+                                      !p.shiny &&
+                                      [
+                                        "Mantyke",
+                                        "Charjabug",
+                                        "Stantler",
+                                        "Hisuian Qwilfish",
+                                        "Caterpie",
+                                        "Weedle",
+                                        "Wurmple",
+                                        "Scatterbug",
+                                        "Metapod",
+                                        "Kakuna",
+                                        "Silcoon",
+                                        "Cascoon",
+                                        "Kricketot",
+                                        "Blipbug",
+                                      ].includes(p.name) &&
+                                      parseFloat(p.iv) >= 10.0 &&
+                                      parseFloat(p.iv) <= 85.0
+                                  )
+                                  .slice(0, tasks[client.user.username].evolve)
+                                  .map((p) => p.id);
+
+                                if (
+                                  filteredPokemon.length ==
+                                  tasks[client.user.username].evolve
+                                ) {
+                                  channel.send(
+                                    `<@716390085896962058> evolve ${filteredPokemon.join(
+                                      " "
+                                    )}`
+                                  );
+
+                                  sendLog(
+                                    client.user.username,
+                                    `Evolved ${filteredPokemon.length} pokemon!`,
+                                    "success"
+                                  );
+                                  tasks[client.user.username].evolve = 0;
+                                }
+                              }
+                            });
+                        })();
+                      });
+                  }
                 }
-                return true;
-              })()
-            ) {
+
+                if (
+                  msg.components[0]?.components[1] &&
+                  msg.embeds[0] &&
+                  msg.embeds[0].footer &&
+                  msg.embeds[0].footer.text &&
+                  (() => {
+                    const footerText = msg.embeds[0].footer.text;
+                    const match = footerText.match(
+                      /(\d+)[^\d]+(\d+)[^\d]+(\d+)/
+                    );
+                    if (match) {
+                      const lastNumber = parseInt(match[3], 10);
+                      const secondLastNumber = parseInt(match[2], 10);
+                      if (lastNumber === secondLastNumber) return false;
+                    }
+                    return true;
+                  })()
+                ) {
+                  client.on("messageUpdate", messageUpdateListener);
+                  msg.clickButton(msg?.components[0]?.components[1]?.customId);
+                }
+              });
+            //}
+
+            /*if (msg?.components[0]?.components[1]) {
               client.on("messageUpdate", messageUpdateListener);
               msg.clickButton(msg?.components[0]?.components[1]?.customId);
-            }
-          });
-        //}
+            }*/
+            //});
+          }
+          await tasksCompleted(client, channel, tasks, pokemon);
+          channel.send("<@716390085896962058> order iv");
+        }
+      });
 
-        /*if (msg?.components[0]?.components[1]) {
-          client.on("messageUpdate", messageUpdateListener);
-          msg.clickButton(msg?.components[0]?.components[1]?.customId);
-        }*/
-        //});
-      }
-    }, 15000);
+    await wait(500);
+    channel.send("<@716390085896962058> p");
   });
 
-  client.on("messageCreate", (msg) => {
-    if (msg.content === "ping") {
-      msg.reply("i am not a chinese person");
+  setInterval(() => {
+    if (counter == done && counter !== 0) {
+      sendLog(null, "All accounts are done completing!", "info");
+      process.exit(0);
     }
-  });
+  }, 1000);
 });
 
 const chalk = require("chalk");
 const date = require("date-and-time");
 
 async function handleReleaseTask(client, channel, pokemon, tasks) {
-  tasks[client.user.username].release = 3;
   const releaseAmount = tasks[client.user.username].release;
   if (releaseAmount <= 0) return;
 
-  const filteredPokemon = pokemon
+  let filteredPokemon = pokemon
     .filter(
       (p) =>
         !p.rare &&
@@ -770,9 +1343,10 @@ async function handleReleaseTask(client, channel, pokemon, tasks) {
   const collector = channel.createMessageCollector({
     filter: (msg) =>
       msg.author.id === "716390085896962058" &&
-      msg?.content.includes(
+      (msg?.content.includes(
         "Are you sure you want to release the following pokémon"
-      ) &&
+      ) ||
+        msg?.content.includes("Are you sure you want to **release**")) &&
       channel.messages.fetch(msg.reference.messageId).author.id ===
         client.user.id,
     time: 20000,
@@ -789,7 +1363,7 @@ async function handleReleaseTask(client, channel, pokemon, tasks) {
     );
   });
 
-  filteredPokemon.forEach((filtered) => {
+  await filteredPokemon.forEach((filtered) => {
     const index = pokemon.findIndex((p) => p.id === filtered.id);
     if (index !== -1) pokemon.splice(index, 1);
   });
@@ -802,7 +1376,7 @@ async function handleSellTask(client, channel, pokemon, tasks, market) {
   )
     return;
 
-  const filteredPokemon = pokemon
+  let filteredPokemon = await pokemon
     .filter(
       (p) =>
         !p.rare &&
@@ -813,6 +1387,7 @@ async function handleSellTask(client, channel, pokemon, tasks, market) {
     .slice(0, 1)
     .map((p) => p.id);
 
+  console.log(filteredPokemon);
   await channel.send(`<@716390085896962058> m add ${filteredPokemon[0]} 1000`);
 
   const collector = channel.createMessageCollector({
@@ -826,8 +1401,6 @@ async function handleSellTask(client, channel, pokemon, tasks, market) {
   });
 
   collector.on("collect", async (msg) => {
-    await msg.clickButton(msg.components[0].components[0].customId);
-
     const listingCollector = channel.createMessageCollector({
       filter: (msg) =>
         msg.author.id === "716390085896962058" &&
@@ -845,6 +1418,8 @@ async function handleSellTask(client, channel, pokemon, tasks, market) {
         sendLog(client.user.username, `Listed pokemon for sale!`, "success");
       }
     });
+
+    await msg.clickButton(msg.components[0].components[0].customId);
   });
 }
 
@@ -857,7 +1432,7 @@ async function handleBuyTask(client, channel, tasks, market) {
   );
 
   if (availableListings.length === 0) {
-    sendLog(client.user.username, "No available listings found.", "error");
+    //sendLog(client.user.username, "No available listings found.", "error");
     return;
   }
 
@@ -929,6 +1504,25 @@ function sendLog(username, message, type) {
           `: ` +
           message
       );
+  }
+}
+
+async function tasksCompleted(client, channel, tasks, pokemon) {
+  const marketOutstanding = market[client.user.username]?.length || 0;
+  sendLog(
+    client.user.username,
+    `Tasks succesfully completed, got ${marketOutstanding} market orders outstanding, ${
+      tasks[client.user.username].trade
+    } trades left to do.`,
+    "success"
+  );
+  done++;
+  if (tasks[client.user.username].spend > 0) {
+    sendLog(
+      client.user.username,
+      `No listings found from your other accounts to buy, or not enough Pokécoins present, please run again or manually buy a listing.`,
+      "error"
+    );
   }
 }
 
