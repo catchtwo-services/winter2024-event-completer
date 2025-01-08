@@ -744,7 +744,6 @@ tokens.forEach(async (token) => {
             //});
           }
           await tasksCompleted(client, channel, tasks, pokemon);
-          channel.send("<@716390085896962058> order iv");
         };
 
         if (msg.components[0]?.components[1]) {
@@ -1302,7 +1301,6 @@ tokens.forEach(async (token) => {
             //});
           }
           await tasksCompleted(client, channel, tasks, pokemon);
-          channel.send("<@716390085896962058> order iv");
         }
       });
 
@@ -1508,6 +1506,7 @@ function sendLog(username, message, type) {
 }
 
 async function tasksCompleted(client, channel, tasks, pokemon) {
+  channel.send("<@716390085896962058> order iv");
   const marketOutstanding = market[client.user.username]?.length || 0;
   sendLog(
     client.user.username,
