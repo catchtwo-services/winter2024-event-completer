@@ -1,0 +1,18 @@
+{
+  "name": "poketwo-winter2024-event-completer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kyan0045",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "date-and-time": "^3.6.0",
+    "discord.js-selfbot-v13": "^3.4.2",
+    "fs": "^0.0.1-security",
+    "pokehint": "^1.4.7"
+  }
+}
