@@ -168,9 +168,12 @@ tokens.forEach(async (token) => {
             const name = nameMatch[1].replace("✨", "").trimStart();
             const iv = ivMatch[1];
             const shiny = shinyMatch ? true : false;
-            const rarity = await checkRarity(name).catch((err) => {
+            let rarity;
+            try {
+              rarity = await checkRarity(name);
+            } catch (err) {
               rarity = "Unknown";
-            }); // If the pokemon is not found, it is considered Unknown & won't be used
+            }
             const rare = rarity !== "Regular";
 
             pokemon.push({ id, name, iv, shiny, rare });
@@ -193,9 +196,12 @@ tokens.forEach(async (token) => {
               const name = nameMatch[1].replace("✨", "").trimStart();
               const iv = ivMatch[1];
               const shiny = shinyMatch ? true : false;
-              const rarity = await checkRarity(name).catch((err) => {
+              let rarity;
+              try {
+                rarity = await checkRarity(name);
+              } catch (err) {
                 rarity = "Unknown";
-              }); // If the pokemon is not found, it is considered Unknown & won't be used
+              }
               const rare = rarity !== "Regular";
 
               pokemon.push({ id, name, iv, shiny, rare });
@@ -305,9 +311,12 @@ tokens.forEach(async (token) => {
                     const name = nameMatch[1].replace("✨", "").trimStart();
                     const iv = ivMatch[1];
                     const shiny = shinyMatch ? true : false;
-                    const rarity = await checkRarity(name).catch((err) => {
+                    let rarity;
+                    try {
+                      rarity = await checkRarity(name);
+                    } catch (err) {
                       rarity = "Unknown";
-                    }); // If the pokemon is not found, it is considered Unknown & won't be used
+                    }
                     const rare = rarity !== "Regular";
 
                     pokemon.push({ id, name, iv, shiny, rare });
@@ -330,9 +339,12 @@ tokens.forEach(async (token) => {
                       const name = nameMatch[1].replace("✨", "").trimStart();
                       const iv = ivMatch[1];
                       const shiny = shinyMatch ? true : false;
-                      const rarity = await checkRarity(name).catch((err) => {
+                      let rarity;
+                      try {
+                        rarity = await checkRarity(name);
+                      } catch (err) {
                         rarity = "Unknown";
-                      }); // If the pokemon is not found, it is considered Unknown & won't be used
+                      }
                       const rare = rarity !== "Regular";
 
                       pokemon.push({ id, name, iv, shiny, rare });
@@ -662,9 +674,12 @@ tokens.forEach(async (token) => {
                                     .trimStart();
                                   const iv = ivMatch[1];
                                   const shiny = shinyMatch ? true : false;
-                                  const rarity = await checkRarity(name).catch((err) => {
+                                  let rarity;
+                                  try {
+                                    rarity = await checkRarity(name);
+                                  } catch (err) {
                                     rarity = "Unknown";
-                                  }); // If the pokemon is not found, it is considered Unknown & won't be used
+                                  }
                                   const rare = rarity !== "Regular";
 
                                   pokemon.push({ id, name, iv, shiny, rare });
@@ -868,9 +883,12 @@ tokens.forEach(async (token) => {
                     const name = nameMatch[1].replace("✨", "").trimStart();
                     const iv = ivMatch[1];
                     const shiny = shinyMatch ? true : false;
-                    const rarity = await checkRarity(name).catch((err) => {
+                    let rarity;
+                    try {
+                      rarity = await checkRarity(name);
+                    } catch (err) {
                       rarity = "Unknown";
-                    }); // If the pokemon is not found, it is considered Unknown & won't be used
+                    }
                     const rare = rarity !== "Regular";
 
                     pokemon.push({ id, name, iv, shiny, rare });
@@ -893,9 +911,12 @@ tokens.forEach(async (token) => {
                       const name = nameMatch[1].replace("✨", "").trimStart();
                       const iv = ivMatch[1];
                       const shiny = shinyMatch ? true : false;
-                      const rarity = await checkRarity(name).catch((err) => {
+                      let rarity;
+                      try {
+                        rarity = await checkRarity(name);
+                      } catch (err) {
                         rarity = "Unknown";
-                      }); // If the pokemon is not found, it is considered Unknown & won't be used
+                      }
                       const rare = rarity !== "Regular";
 
                       pokemon.push({ id, name, iv, shiny, rare });
@@ -1225,9 +1246,12 @@ tokens.forEach(async (token) => {
                                     .trimStart();
                                   const iv = ivMatch[1];
                                   const shiny = shinyMatch ? true : false;
-                                  const rarity = await checkRarity(name).catch((err) => {
+                                  let rarity;
+                                  try {
+                                    rarity = await checkRarity(name);
+                                  } catch (err) {
                                     rarity = "Unknown";
-                                  }); // If the pokemon is not found, it is considered Unknown & won't be used
+                                  }
                                   const rare = rarity !== "Regular";
 
                                   pokemon.push({ id, name, iv, shiny, rare });
